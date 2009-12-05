@@ -625,15 +625,7 @@ var ProtoMultiSelect = Class.create(TextboxList, {
 		// This would need to be further extended if the list was exceptionally long
 		if (!Object.isUndefined(this.options.get('fetchFile')))
 		{
-			new Ajax.Request(this.options.get('fetchFile'), {
-				method: this.options.get('fetchMethod'),
-				parameters: this.options.get('fetchParameters'),
-				onSuccess: function(transport)
-				{
-					transport.responseText.evalJSON(true).each(function(t) { this.autoFeed(t); }.bind(this));
-					if (this.options.get('loadFromInput')) this.loadFromInput()
-				}.bind(this)
-			});
+			this.loadFromFetchFile();
 		}
 		else if (!Object.isUndefined(this.options.get('feed')))
 		{
@@ -1072,6 +1064,18 @@ var ProtoMultiSelect = Class.create(TextboxList, {
 		
 		this.element.insert({ after: div });
 		return div
+	},
+	
+	loadFromFetchFile: function () {
+		new Ajax.Request(this.options.get('fetchFile'), {
+			method: this.options.get('fetchMethod'),
+			parameters: this.options.get('fetchParameters'),
+			onSuccess: function(transport)
+			{
+				transport.responseText.evalJSON(true).each(function(t) { this.autoFeed(t); }.bind(this));
+				if (this.options.get('loadFromInput')) this.loadFromInput()
+			}.bind(this)
+		});
 	},
 	
 	loadFromInput: function() {

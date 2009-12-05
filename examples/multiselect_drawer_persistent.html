@@ -8,79 +8,13 @@
 	    <script src="../js/prototype/prototype.js" type="text/javascript" charset="utf-8"></script>
 	    <script src="../js/prototype/scriptaculous.js" type="text/javascript" charset="utf-8"></script>
 	    <script src="../js/multiselect.js" type="text/javascript" charset="utf-8"></script>
-			<!-- <style>
-				#button_container
-				{
-					margin-left: 70px;
-					margin-bottom: 30px;
-				}
-
-				form
-				{
-					border: 1px solid #999;
-					margin: 50px;
-					padding: 20px 30px 10px;
-				}
-
-				form ol
-				{
-					font: 11px "Lucida Grande", "Verdana";
-					margin: 0;
-					padding: 0;
-				}
-
-				form ol li.input-text
-				{
-					margin-bottom: 10px;
-					list-style-type: none;
-					border-bottom: 1px dotted #999;
-					padding-bottom: 10px;
-				}
-
-				form ol li.input-text label
-				{
-					font-weight: bold;
-					cursor: pointer;
-					display: block;
-					font-size: 13px;
-					margin-bottom: 10px;
-				}
-
-				form ol li.input-text input
-				{
-					width: 500px;
-					padding: 5px 5px 6px;
-					border: 1px solid #999;
-				}
-
-	      div.holder
-	      {
-	        width: 90%
-	      }
-	
-	
-		div.autocomplete { display: block; margin-right: 2px; height: 100px; position: static; background: #eee; overflow: auto; background-color: #fff; border: 1px solid #ccc; border-top: none;}
-		div.autocomplete .default { padding: 5px 7px; border: none; }
-		div.autocomplete ul { display: block; margin: 0; padding: 0; overflow: auto; }
-		div.autocomplete ul li { padding: 5px 12px; z-index: 1000; cursor: pointer; margin: 0; list-style-type: none; border: 1px solid #ccc; border-width: 0 1px 1px; float: left; width: 100px; height: 50px; }
-		div.autocomplete ul li em { font-weight: bold; font-style: normal; background: #ccc; }
-		div.autocomplete ul li.auto-focus { background: #4173CC; color: #fff; }
-		div.autocomplete ul li.auto-focus em { background: none; }	
-	
-			</style> -->
-	  </head>
-
-
 
 <style>
 
-/* TextboxList CSS */
 *:first-child+html div.holder { padding-bottom: 2px; }
 * html div.holder { padding-bottom: 2px; } /* ie7 and below */
 
 div.holder *, div.autocomplete * { font: 11px "Lucida Grande", "Verdana"; }
-
-/* DIV holder */
 div.holder { 
 	width: 460px;
 	-moz-border-radius: 4px; 
@@ -103,7 +37,6 @@ input.inputMessage {
 	font-size: 11px; 
 }
 
-
 div.holder a.bit { text-decoration: none; color: black; }
 div.holder a.bit:active, div.holder a.bit:focus { outline: none; }
 div.holder a.bit-box { -moz-border-radius: 6px; -webkit-border-radius: 6px; border-radius: 6px; border: 1px solid #CAD8F3; background: #DEE7F8; padding: 1px 5px 2px; padding-right: 15px; position: relative; }
@@ -118,10 +51,8 @@ div.holder a.bit-box a.closebutton:active { outline: none }
 div.holder a.bit-box-focus a.closebutton, div.holder a.bit-box-focus a.closebutton:hover { background-position: bottom; }
 
 /* Autocompleter CSS */
-
 div.autocomplete { 
 	display: block; 
-/*	margin-right: 2px; */
 	width: 460px;
 	height: 200px; 
 	position: static; 
@@ -142,20 +73,6 @@ div.autocomplete .default {
 	border: none; 
 }
 
-
-/*div.autocomplete .default { 
-	padding: 5px 7px;
-	border: 1px solid #ccc; 
-	border-width: 0 1px 1px;
-}
-*/
-div.autocomplete ul { 
-	display: none; 
-	margin: 0; 
-	padding: 0; 
-	overflow: auto; 
-}
-
 div.autocomplete ul { 
 	display: block; 
 	margin: 0; padding: 0; 
@@ -167,30 +84,21 @@ div.autocomplete ul li {
 	cursor: pointer; 
 	margin: 0; 
 	list-style-type: none; 
-/*	border: 1px solid #ccc; 
-	border-width: 0 1px 1px; */
 	float: left; 
 	width: 198px; 
-	height: 28px; 
+	height: 28px;
+	overflow: hidden;
+	font-size: 10px;
 }
 div.autocomplete ul li em { 
 	font-weight: bold; 
-	font-style: normal; 
-/*	background: #ccc; */
+	font-style: normal;
+	font-size: 11px; 
 }
 div.autocomplete ul li.auto-focus { 
 	background: #4173CC; 
 	color: #fff; 
 }
-/*div.autocomplete ul li.auto-focus em { background: none; }	*/
-
-
-
-/*div.autocomplete ul li { padding: 5px 12px; z-index: 1000; cursor: pointer; margin: 0; list-style-type: none; border: 1px solid #ccc; border-width: 0 1px 1px; }
-div.autocomplete ul li em { font-weight: bold; font-style: normal; background: #ccc; }
-div.autocomplete ul li.auto-focus { background: #4173CC; color: #fff; }
-div.autocomplete ul li.auto-focus em { background: none; }
-*/
 
 div.footer_box {
 	padding: 4px 5px 0;
@@ -209,44 +117,44 @@ div.footer_item {
 	float: left;
 }
 
+div.caption {
+	overflow: hidden;
+}
 </style>
 
 <body id="test">
-  <h1>Proto!MultiSelect 0.12</h1>
-  <div id="text"></div>
-  <form action="test_submit" method="get" accept-charset="utf-8">
-    <!-- <ol>        
-      <li id="proto-ms-list" class="input-text">
-        <label>MultiSelect Input</label> -->
-  
+	<h1>Proto!MultiSelect 0.12</h1>
+    <div id="text"></div>
+    
+	<form action="test_submit" method="get" accept-charset="utf-8">
+		<div>
+			<input id="contact_widget_input" type="text" value="[]" />
+			<div id="contact_widget_autocomplete" class="autocomplete">
+				<div class="default"></div>
+				<ul id="" class="feed"/>
+			</div>
 
-<div>
-	<input id="contact_widget_input" type="text" value="[]" />
-      
-	  <div id="contact_widget_autocomplete" class="autocomplete">
-		<div class="default">Loading ...</div>
-		<ul id="" class="feed"/>
-	  </div>
-	  <div class="footer_box">
-			<div class="footer_item">Import contacts from:</div>
-			<div id='gmail_import' class="footer_item">
-				<div style="float: left;"><img src="../images/gmail.png"></div>
-				<div style="float: left; margin-left: 5px;"><a id='import_gmail' href="#">Gmail</a></div>
+			<div class="footer_box">
+				<div class="footer_item">Import contacts from:</div>
+					<div id='service_items'>
+						<div id='gmail_import' class="footer_item">
+							<div style="float: left;"><img src="../images/gmail.png"></div>
+							<div style="float: left; margin-left: 5px;"><a id='import_gmail' href="#">Gmail</a></div>
+						</div>
+					
+						<div id='yahoo_import' class="footer_item">
+							<div style="float: left;"><img src="../images/yahoo.png"></div>
+							<div style="float: left; margin-left: 5px;"><a id='import_yahoo' href="#">Yahoo!</a></div>
+						</div>
+					
+						<div id='gmail_import' class="footer_item">
+							<div style="float: left;"><img src="../images/live.png"></div>
+							<div style="float: left; margin-left: 5px;"><a id='import_bsod' href="#">Windows Live Services</a></div>
+						</div>
+					</div>
 			</div>
-			<div id='gmail_import' class="footer_item">
-				<div style="float: left;"><img src="../images/yahoo.png"></div>
-				<div style="float: left; margin-left: 5px;"><a id='import_yahoo' href="#">Yahoo!</a></div>
-			</div>
-			<div id='gmail_import' class="footer_item">
-				<div style="float: left;"><img src="../images/live.png"></div>
-				<div style="float: left; margin-left: 5px;"><a id='import_bsod' href="#">Windows Live Services</a></div>
-			</div>
-			
-	  </div>
-</div>
-      <!-- </li>
-    </ol> -->
-  </form>  
+		</div>
+	</form>  
 
   <br/>
   <div id="button_container">       
@@ -285,10 +193,10 @@ div.footer_item {
 							{ caption: "Ricardo Rojas", value: 22, email: 'ricardo@gmail.com' }
 						];
 
-
 			  $('import_gmail').observe('click', 
 				function () { 
-					alert('gmail!')
+					alert('gmail!');
+					control.loadFromFetchFile();
 				});
 
 			  $('import_yahoo').observe('click', 
@@ -305,9 +213,9 @@ div.footer_item {
 	          control = new ProtoMultiSelect('contact_widget_input', 'contact_widget_autocomplete', {
 							newValues: true,
 							regexSearch: false,
-							// fetchFile: 'emails',
-							// fetchMethod: 'get',
-							feed: json_feed,
+							fetchFile: 'emails',
+							fetchMethod: 'get',
+							// feed: json_feed,
 							defaultMessage: "This is the default message",
 							inputMessage: "Enter name or email address",
 							sortResults: true,
@@ -318,23 +226,18 @@ div.footer_item {
 							onUserAdd: function(el) { console.log("onAdd: " + new Hash(el).inspect()); },
 							onUserRemove: function(el) { console.log("onRemove: " + new Hash(el).inspect()); },						
 							pinAutoHolder: true,
-							renderItem: function(item) { 
-								
-								html = "<div style='float: left;'><img style='padding-right: 5px;' src='../images/add.png'></div><div style='float: left;'>";								
-								if (item.email) {
-									html = html +  "<em>" + item.caption +"(" + item.value + ")" + "</em><br/>" + item.email;
-								} else {
-									html = html +  "<em>" + item.caption + "</em><br/> no email";
-								}
+							renderItem: function(item) { 								
+								html = "<div style='float: left;'><img style='padding-right: 5px;' src='../images/add.png'></div><div class='caption'>";								
+								html = html +  "<em>" + item.caption + "</em><br/>" + item.email;
 								html = html + "</div>";
 								return html																
 							},
 							sortFunction: function(a, b) { return ((b.value || 0)-(a.value || 0)); }  // e.g. sort reverse by value
 							
-						});
-	        });    
+						});		
+				
+	});
 	    </script>
 	  </body>  
 	</html>
-	<!-- vi: set noexpandtab -->
 	
