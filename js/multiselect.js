@@ -572,6 +572,7 @@ var ProtoMultiSelect = Class.create(TextboxList, {
 			regexSearch: true,
 			loadFromInput: true,
 			defaultMessage: "",					// Used to provide the default autocomplete message if built by the control
+			defaultDisplay: -1,
 			inputMessage: null, 					// Used to provide a default message in the input box
 			sortResults: false,
 			allowDuplicates: false, 			// prevent dupes by checking for duplicate normalized captions
@@ -620,7 +621,7 @@ var ProtoMultiSelect = Class.create(TextboxList, {
 		{
 			this.add({ value: el.readAttribute('value'), caption: el.innerHTML });
 		}, this);
-
+		
 		// Loading the options list only once at initialize.
 		// This would need to be further extended if the list was exceptionally long
 		if (!Object.isUndefined(this.options.get('fetchFile')))
@@ -630,6 +631,7 @@ var ProtoMultiSelect = Class.create(TextboxList, {
 		else if (!Object.isUndefined(this.options.get('feed')))
 		{
 			this.options.get('feed').each(function(t) { this.autoFeed(t) }.bind(this));
+			if (this.options.get('defaultDisplay') > 0) this.setDefaultDisplay();
 		}
 
 		// We need to load from input as part of the AJAX request when using fetchFile
@@ -663,7 +665,7 @@ var ProtoMultiSelect = Class.create(TextboxList, {
 				}
 			}.bindAsEventListener(this));
 			
-		}
+		}		
 	},
 	
 	add: function($super, elem) {
@@ -805,31 +807,33 @@ var ProtoMultiSelect = Class.create(TextboxList, {
 				function(result, ti) {
 					count++;
 					if (ti >= ((this.options.get('maxResults') ? this.options.get('maxResults') : this.loptions.get('autocomplete').maxresults) - extra_elems_count)) return;
+					el = this.addToAutocomplete(result);
 					
-					var that = this;
-					var el = new Element('li');
-					var el_data = result.evalJSON(true)
-					var caption = el_data.caption;
-					
-					el.observe('click', function(e)
-						{
-							e.stop();
-							that.current_input = "";
-							that.autoAdd(this);
-						})
-						.observe('mouseover', function() { that.autoFocus(this); } )
-					
-					if (this.options.get('renderItem')) {
-						el.update(this.options.get('renderItem')(el_data));
-					} else {
-						el.update(this.autoHighlight(caption, search));
-					}
-						
-					
-					this.autoresults.insert(el);
-					el.cacheData('result', result.evalJSON(true));
+					// var that = this;
+					// var el = new Element('li');
+					// var el_data = result.evalJSON(true)
+					// var caption = el_data.caption;
+					// 
+					// el.observe('click', function(e)
+					// 	{
+					// 		e.stop();
+					// 		that.current_input = "";
+					// 		that.autoAdd(this);
+					// 	})
+					// 	.observe('mouseover', function() { that.autoFocus(this); } )
+					// 
+					// if (this.options.get('renderItem')) {
+					// 	el.update(this.options.get('renderItem')(el_data));
+					// } else {
+					// 	el.update(this.autoHighlight(caption, search));
+					// }
+					// 	
+					// 
+					// this.autoresults.insert(el);
+					// el.cacheData('result', result.evalJSON(true));
 					if (ti == 0) this.autoFocus(el);
-				}, this
+				}, 
+				this
 			);
 			
 			if (extra_elems_count == count) {
@@ -897,8 +901,41 @@ var ProtoMultiSelect = Class.create(TextboxList, {
 		return this;
 	},
 
+	setDefaultDisplay: function () {
+		i_max = Math.min(this.options.get('defaultDisplay'), this.data.length)
+		for (i=0; i<i_max; i++) this.addToAutocomplete(this.data[i]);
+	},
+
+	addToAutocomplete: function (result) {		
+		var that = this;
+		var el = new Element('li');
+		var el_data = result.evalJSON(true)
+		var caption = el_data.caption;
+		
+		// console.log('adding caption: ' + el_data.caption);
+		
+		el.observe('click', function(e)
+			{
+				e.stop();
+				that.current_input = "";
+				that.autoAdd(this);
+			})
+			.observe('mouseover', function() { that.autoFocus(this); } )
+		
+		if (this.options.get('renderItem')) {
+			el.update(this.options.get('renderItem')(el_data));
+		} else {
+			el.update(this.autoHighlight(caption, search));
+		}
+			
+		this.autoresults.insert(el);
+		el.cacheData('result', result.evalJSON(true));
+		return el;		
+	},
+
 	autoFeed: function(text)
 	{
+		// console.log('autoFeed: data.length' + this.data.length);
 		var with_case = this.options.get('caseSensitive');
 		if (this.data.indexOf(Object.toJSON(text)) == -1)
 		{
@@ -1035,7 +1072,7 @@ var ProtoMultiSelect = Class.create(TextboxList, {
 			if ((e.keyCode == Event.KEY_RETURN) && this.autoenter) e.stop();
 			this.autoenter = false;
 		}.bind(this));
-		
+		console.log('here');
 		return box;
 	},
 	
@@ -1074,6 +1111,7 @@ var ProtoMultiSelect = Class.create(TextboxList, {
 			{
 				transport.responseText.evalJSON(true).each(function(t) { this.autoFeed(t); }.bind(this));
 				if (this.options.get('loadFromInput')) this.loadFromInput()
+				if (this.options.get('defaultDisplay') > 0) this.setDefaultDisplay();
 			}.bind(this)
 		});
 	},
