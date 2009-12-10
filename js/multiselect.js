@@ -665,7 +665,34 @@ var ProtoMultiSelect = Class.create(TextboxList, {
 				}
 			}.bindAsEventListener(this));
 			
+		}
+		
+		this.setDefaultEvents();
+	},
+	
+	setDefaultEvents: function() {
+		
+		if (this.options.get('defaultDisplay') > 0) {
+			this.holder.observe('keyup', 
+				function (e) {
+					console.log('current_event = ' + e.keyCode);
+					if (this.current_input.blank()) this.setDefaultDisplay();
+				}.bindAsEventListener(this)
+			).observe('click',
+				function (e) {
+					console.log('current_event = click');
+					if (this.current_input.blank()) this.setDefaultDisplay();
+				}.bindAsEventListener(this)
+			);
+
+			this.autoholder.observe('click', 
+				function (e) {
+					console.log('autoholder click');
+					if (this.current_input.blank()) this.setDefaultDisplay();
+				}.bindAsEventListener(this)
+			);
 		}		
+		console.log("setEvents!!");
 	},
 	
 	add: function($super, elem) {
@@ -678,6 +705,12 @@ var ProtoMultiSelect = Class.create(TextboxList, {
 	dispose: function($super, elem) {
 		this.options.get("onUserRemove")( this.selectedValues.get(elem.getAttribute('id')) );
 		this.selectedValues.unset(elem.getAttribute('id'));
+		// console.log('disposing');
+		// if ((this.options.get('defaultDisplay') > 0) && this.current_input.blank()) {
+		// 	console.log('blank!');
+		// 	this.setDefaultDisplay();
+		// }
+		
 		return $super(elem);
 	},
 	foundInData: function(search) {
@@ -851,6 +884,12 @@ var ProtoMultiSelect = Class.create(TextboxList, {
 			}
 		}
 		
+		// console.log('here .. current_input =  ' + this.current_input);
+		// if ((this.options.get('defaultDisplay') > 0) && this.current_input.blank()) {
+		// 	console.log('blank!');
+		// 	this.setDefaultDisplay();
+		// }
+		
 		return this;
 	},
 	
@@ -903,10 +942,21 @@ var ProtoMultiSelect = Class.create(TextboxList, {
 
 	setDefaultDisplay: function () {
 		i_max = Math.min(this.options.get('defaultDisplay'), this.data.length)
-		for (i=0; i<i_max; i++) this.addToAutocomplete(this.data[i]);
+		console.log('setDefaultDisplay: i_max = ' + i_max);
+		
+		this.autoresults.setStyle({'display':'block'}).update();
+		i = 0; j = 0;
+		while ((i < i_max) && (j < this.data.length)) {
+			if (typeof this.data[j] != "undefined") {
+				this.addToAutocomplete(this.data[j]);
+				i++;
+			}
+			j++;
+		}
 	},
 
-	addToAutocomplete: function (result) {		
+	addToAutocomplete: function (result) {	
+		console.log('addToAutoComplete: result = ' + result);	
 		var that = this;
 		var el = new Element('li');
 		var el_data = result.evalJSON(true)
@@ -1064,6 +1114,7 @@ var ProtoMultiSelect = Class.create(TextboxList, {
 							this.autoShow(input.value.escapeHTML());
 						}
 					}.bind(this), this.options.get('autoDelay'));
+					
 			}
 		}.bind(this));
 		
@@ -1072,7 +1123,7 @@ var ProtoMultiSelect = Class.create(TextboxList, {
 			if ((e.keyCode == Event.KEY_RETURN) && this.autoenter) e.stop();
 			this.autoenter = false;
 		}.bind(this));
-		console.log('here');
+
 		return box;
 	},
 	
