@@ -681,7 +681,6 @@ var ProtoMultiSelect = Class.create(TextboxList, {
 				}.bindAsEventListener(this)
 			);
 
-
 			this.autoholder.observe('click', 
 				function (e) {
 					if (this.current_input.blank()) this.setDefaultDisplay();
@@ -837,30 +836,7 @@ var ProtoMultiSelect = Class.create(TextboxList, {
 				function(result, ti) {
 					count++;
 					if (ti >= ((this.options.get('maxResults') ? this.options.get('maxResults') : this.loptions.get('autocomplete').maxresults) - extra_elems_count)) return;
-					el = this.addToAutocomplete(result);
-					
-					// var that = this;
-					// var el = new Element('li');
-					// var el_data = result.evalJSON(true)
-					// var caption = el_data.caption;
-					// 
-					// el.observe('click', function(e)
-					// 	{
-					// 		e.stop();
-					// 		that.current_input = "";
-					// 		that.autoAdd(this);
-					// 	})
-					// 	.observe('mouseover', function() { that.autoFocus(this); } )
-					// 
-					// if (this.options.get('renderItem')) {
-					// 	el.update(this.options.get('renderItem')(el_data));
-					// } else {
-					// 	el.update(this.autoHighlight(caption, search));
-					// }
-					// 	
-					// 
-					// this.autoresults.insert(el);
-					// el.cacheData('result', result.evalJSON(true));
+					el = this.addToAutocomplete(result);					
 					if (ti == 0) this.autoFocus(el);
 				}, 
 				this
@@ -1097,7 +1073,6 @@ var ProtoMultiSelect = Class.create(TextboxList, {
 						if (this.dosearch)
 						{
 							this.autocurrent = false;
-							// if (!this.current_input.blank()) this.autoShow(input.value.escapeHTML());
 							this.autoShow(input.value.escapeHTML());
 						}
 					}.bind(this), this.options.get('autoDelay'));
