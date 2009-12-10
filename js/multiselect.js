@@ -309,6 +309,7 @@ var TextboxList = Class.create({
 		}
 
 		this.options.get("onAdd")( text );
+		if (this.options.get('defaultDisplay') > 0) this.setDefaultDisplay();			
 		return el;
 	},
 
@@ -673,26 +674,21 @@ var ProtoMultiSelect = Class.create(TextboxList, {
 	setDefaultEvents: function() {
 		
 		if (this.options.get('defaultDisplay') > 0) {
-			this.holder.observe('keyup', 
+			this.holder.observe('click',
 				function (e) {
-					console.log('current_event = ' + e.keyCode);
 					if (this.current_input.blank()) this.setDefaultDisplay();
-				}.bindAsEventListener(this)
-			).observe('click',
-				function (e) {
-					console.log('current_event = click');
-					if (this.current_input.blank()) this.setDefaultDisplay();
+					e.stop();
 				}.bindAsEventListener(this)
 			);
 
+
 			this.autoholder.observe('click', 
 				function (e) {
-					console.log('autoholder click');
 					if (this.current_input.blank()) this.setDefaultDisplay();
+					e.stop();
 				}.bindAsEventListener(this)
 			);
 		}		
-		console.log("setEvents!!");
 	},
 	
 	add: function($super, elem) {
@@ -705,11 +701,6 @@ var ProtoMultiSelect = Class.create(TextboxList, {
 	dispose: function($super, elem) {
 		this.options.get("onUserRemove")( this.selectedValues.get(elem.getAttribute('id')) );
 		this.selectedValues.unset(elem.getAttribute('id'));
-		// console.log('disposing');
-		// if ((this.options.get('defaultDisplay') > 0) && this.current_input.blank()) {
-		// 	console.log('blank!');
-		// 	this.setDefaultDisplay();
-		// }
 		
 		return $super(elem);
 	},
@@ -766,9 +757,12 @@ var ProtoMultiSelect = Class.create(TextboxList, {
 		this.autoClear();
 		
 		if (!search || !search.strip() || (!search.length || search.length < this.loptions.get('autocomplete').minchars)) {
-			if (this.autoholder.select('.default').first()) {
-				this.autoholder.select('.default').first().setStyle({'display': 'block'});
+			
+			if (this.options.get('defaultDisplay') > 0) this.setDefaultDisplay()
+			else {
+				if (this.autoholder.select('.default').first()) this.autoholder.select('.default').first().setStyle({'display': 'block'})
 			}
+			
 			this.resultsshown = false;
 			
 		} else {
@@ -887,12 +881,6 @@ var ProtoMultiSelect = Class.create(TextboxList, {
 			}
 		}
 		
-		// console.log('here .. current_input =  ' + this.current_input);
-		// if ((this.options.get('defaultDisplay') > 0) && this.current_input.blank()) {
-		// 	console.log('blank!');
-		// 	this.setDefaultDisplay();
-		// }
-		
 		return this;
 	},
 	
@@ -945,7 +933,6 @@ var ProtoMultiSelect = Class.create(TextboxList, {
 
 	setDefaultDisplay: function () {
 		i_max = Math.min(this.options.get('defaultDisplay'), this.data.length)
-		console.log('setDefaultDisplay: i_max = ' + i_max);
 		
 		this.autoresults.setStyle({'display':'block'}).update();
 		i = 0; j = 0;
@@ -959,13 +946,10 @@ var ProtoMultiSelect = Class.create(TextboxList, {
 	},
 
 	addToAutocomplete: function (result) {	
-		console.log('addToAutoComplete: result = ' + result);	
 		var that = this;
 		var el = new Element('li');
 		var el_data = result.evalJSON(true)
 		var caption = el_data.caption;
-		
-		// console.log('adding caption: ' + el_data.caption);
 		
 		el.observe('click', function(e)
 			{
@@ -988,7 +972,6 @@ var ProtoMultiSelect = Class.create(TextboxList, {
 
 	autoFeed: function(text)
 	{
-		// console.log('autoFeed: data.length' + this.data.length);
 		var with_case = this.options.get('caseSensitive');
 		if (this.data.indexOf(Object.toJSON(text)) == -1)
 		{
@@ -1114,6 +1097,7 @@ var ProtoMultiSelect = Class.create(TextboxList, {
 						if (this.dosearch)
 						{
 							this.autocurrent = false;
+							// if (!this.current_input.blank()) this.autoShow(input.value.escapeHTML());
 							this.autoShow(input.value.escapeHTML());
 						}
 					}.bind(this), this.options.get('autoDelay'));
