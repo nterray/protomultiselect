@@ -836,7 +836,7 @@ var ProtoMultiSelect = Class.create(TextboxList, {
 				function(result, ti) {
 					count++;
 					if (ti >= ((this.options.get('maxResults') ? this.options.get('maxResults') : this.loptions.get('autocomplete').maxresults) - extra_elems_count)) return;
-					el = this.addToAutocomplete(result);					
+					el = this.addToAutocomplete(result, search);					
 					if (ti == 0) this.autoFocus(el);
 				}, 
 				this
@@ -921,7 +921,7 @@ var ProtoMultiSelect = Class.create(TextboxList, {
 		}
 	},
 
-	addToAutocomplete: function (result) {	
+	addToAutocomplete: function (result, search) {	
 		var that = this;
 		var el = new Element('li');
 		var el_data = result.evalJSON(true)
